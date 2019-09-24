@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dev">
+	<!-- 재사용 구문을 별도 작성 후 적용 -->
+	<sql id="my1">id, name, passwd, reg_date</sql>
+	<sql id="my2">from membertab where id=#{id}</sql>
+
+
+	<select id="selectDataAll" resultType="dto">
+		select id, name, passwd, reg_date from membertab
+	</select>
+	<select id="selectDataPart" parameterType="string" resultType="dto" statementType="PREPARED">
+		select <include refid="my1"></include><include refid="my2"></include>
+	</select>
+	<insert id="insertData" parameterType="formbean">
+		insert into membertab values(#{id}, #{name}, #{passwd}, NOW())
+	</insert>
+	<update id="updateData" parameterType="formbean">
+		update membertab set name=#{name} where id=#{id}
+	</update>
+	<!-- where ${colname}=#{id} -->
+	<delete id="deleteData" parameterType="formbean">
+		delete <include refid="my2"></include>
+	</delete>
+</mapper>
